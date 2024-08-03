@@ -1,0 +1,36 @@
+INSERT INTO tb_cliente (nome, endereco, telefone) VALUES ('Lucas Oliveira', 'Rua das Flores, 102', '(11) 98765-4321');
+INSERT INTO tb_cliente (nome, endereco, telefone) VALUES ('Maria Ferreira', 'Avenida dos Pioneiros, 3', '(11) 99876-5432');
+INSERT INTO tb_cliente (nome, endereco, telefone) VALUES ('Pedro Silva', 'Travessa da Amizade, 54', '(11) 91234-5678');
+INSERT INTO tb_cliente (nome, endereco, telefone) VALUES ('Ana Costa', 'Alameda dos Pinheiros, 98', '(11) 92345-6789');
+INSERT INTO tb_cliente (nome, endereco, telefone) VALUES ('João Santos', 'Rua do Sol, 12', '(11) 93456-7890');
+INSERT INTO tb_cliente (nome, endereco, telefone) VALUES ('Beatriz Almeida', 'Avenida Esperança, 1024', '(11) 94567-8901');
+INSERT INTO tb_cliente (nome, endereco, telefone) VALUES ('Gabriel Rocha', 'Travessa dos Lírios, 90 ', '(11) 95678-9012');
+INSERT INTO tb_cliente (nome, endereco, telefone) VALUES ('Larissa Mendes', 'Alameda das Acácias, 423', '(11) 96789-0123');
+
+INSERT INTO tb_produto (nome, tipo, preco) VALUES ('Pizza Margherita', 'Pizza', 25.50);
+INSERT INTO tb_produto (nome, tipo, preco) VALUES ('Pizza Calabresa', 'Pizza', 28.00);
+INSERT INTO tb_produto (nome, tipo, preco) VALUES ('Pizza Quatro Queijos', 'Pizza', 30.00);
+INSERT INTO tb_produto (nome, tipo, preco) VALUES ('Pizza Portuguesa', 'Pizza', 32.00);
+INSERT INTO tb_produto (nome, tipo, preco) VALUES ('Pizza Frango com Catupiry', 'Pizza', 29.00);
+INSERT INTO tb_produto (nome, tipo, preco) VALUES ('Pizza Vegetariana', 'Pizza', 26.00);
+INSERT INTO tb_produto (nome, tipo, preco) VALUES ('Pizza Mussarela', 'Pizza', 28.00);
+INSERT INTO tb_produto (nome, tipo, preco) VALUES ('Porção de Batata Frita', 'Acompanhamento', 12.00);
+INSERT INTO tb_produto (nome, tipo, preco) VALUES ('Coca-Cola 1,5L', 'Bebida', 7.30);
+INSERT INTO tb_produto (nome, tipo, preco) VALUES ('Suco de Laranja 1L', 'Bebida', 8.00);
+INSERT INTO tb_produto (nome, tipo, preco) VALUES ('Coca-Cola 2L', 'Bebida', 10.25);
+INSERT INTO tb_produto (nome, tipo, preco) VALUES ('Calzone de Presunto e Queijo', 'Pizza', 27.00);
+INSERT INTO tb_produto (nome, tipo, preco) VALUES ('Porção de Onion Rings', 'Acompanhamento', 14.00);
+INSERT INTO tb_produto (nome, tipo, preco) VALUES ('Água Mineral 500ml', 'Bebida', 5.00);
+INSERT INTO tb_produto (nome, tipo, preco) VALUES ('Cerveja Artesanal 600ml', 'Bebida', 15.00);
+
+INSERT INTO tb_pedido (id_produto, id_cliente, endereco_entrega, status_pedido, data_pedido) VALUES (1, 1, 'Rua das Flores, 102', 'ENTREGUE', '2024-08-02');
+INSERT INTO tb_pedido (id_produto, id_cliente, endereco_entrega, status_pedido, data_pedido) VALUES (2, 1, 'Rua das Flores, 102', 'ENTREGUE', '2024-08-02');
+INSERT INTO tb_pedido (id_produto, id_cliente, endereco_entrega, status_pedido, data_pedido) VALUES (3, 2, 'Avenida dos Pioneiros, 3', 'NOVO', '2024-08-01');
+INSERT INTO tb_pedido (id_produto, id_cliente, endereco_entrega, status_pedido, data_pedido) VALUES (5, 3, 'Travessa da Amizade, 54', 'ENTREGUE', '2024-08-02');
+INSERT INTO tb_pedido (id_produto, id_cliente, endereco_entrega, status_pedido, data_pedido) VALUES (7, 4, 'Alameda dos Pinheiros, 98', 'ENTREGUE', '2024-07-30');
+INSERT INTO tb_pedido (id_produto, id_cliente, endereco_entrega, status_pedido, data_pedido) VALUES (8, 5, 'Rua do Sol, 12', 'NOVO', '2024-08-02');
+INSERT INTO tb_pedido (id_produto, id_cliente, endereco_entrega, status_pedido, data_pedido) VALUES (10, 6, 'Avenida Esperança, 1024', 'CANCELADO', '2024-07-31');
+INSERT INTO tb_pedido (id_produto, id_cliente, endereco_entrega, status_pedido, data_pedido) VALUES (12, 7, 'Travessa dos Lírios, 90', 'CANCELADO', '2024-08-01');
+INSERT INTO tb_pedido (id_produto, id_cliente, endereco_entrega, status_pedido, data_pedido) VALUES (13, 8, 'Alameda das Acácias, 423', 'ENTREGUE', '2024-08-02');
+INSERT INTO tb_pedido (id_produto, id_cliente, endereco_entrega, status_pedido, data_pedido) VALUES (14, 1, 'Rua das Flores, 102', 'EM PREPARAÇÃO', '2024-08-02');
+INSERT INTO tb_pedido (id_produto, id_cliente, endereco_entrega, status_pedido, data_pedido) VALUES (15, 2, 'Avenida dos Pioneiros, 3', 'NOVO', '2024-08-02');
