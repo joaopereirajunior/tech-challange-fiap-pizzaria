@@ -1,5 +1,6 @@
 package br.com.fiap.pizzaria.domain.model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import br.com.fiap.pizzaria.domain.enums.StatusPedido;
@@ -21,28 +22,27 @@ public class Pedido {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idPedido;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "id_produto")
 	private Produto produto;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "id_cliente")
 	private Cliente cliente;
-	
+
 	@Column(name = "endereco_entrega")
 	private String enderecoEntrega;
-	
+
 	@Column(name = "status_pedido")
-	private String statusPedido;
-	
-	@Temporal(TemporalType.DATE)
+	private String statusPedido ;
+
 	@Column(name = "data_pedido")
-	private Date dataPedido;
-	
+	private LocalDateTime dataPedido;
+
 	public Pedido() {}
 
-	public Pedido(Produto produto, Cliente cliente, String enderecoEntrega, String statusPedido, Date dataPedido) {
+	public Pedido(Produto produto, Cliente cliente, String enderecoEntrega, String statusPedido, LocalDateTime dataPedido) {
 		this.produto = produto;
 		this.cliente = cliente;
 		this.enderecoEntrega = enderecoEntrega;
@@ -86,11 +86,11 @@ public class Pedido {
 		this.statusPedido = status;
 	}
 
-	public Date getDataPedido() {
+	public LocalDateTime getDataPedido() {
 		return dataPedido;
 	}
 
-	public void setDataPedido(Date dataPedido) {
+	public void setDataPedido(LocalDateTime dataPedido) {
 		this.dataPedido = dataPedido;
 	}
 }

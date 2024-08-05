@@ -1,5 +1,6 @@
 package br.com.fiap.pizzaria.domain.model;
 
+import br.com.fiap.pizzaria.interfaceadapters.dto.ProdutoRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -58,4 +59,6 @@ public class Produto {
 	public void setPreco(Double preco) {
 		this.preco = preco;
 	}
+
+
 }
