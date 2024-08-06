@@ -1,36 +1,42 @@
 package br.com.fiap.pizzaria.domain.service;
 
-import br.com.fiap.pizzaria.domain.enums.StatusPedido;
-import br.com.fiap.pizzaria.domain.model.Cliente;
+import java.util.List;
+import java.util.Optional;
+
 import br.com.fiap.pizzaria.domain.model.Pedido;
-import br.com.fiap.pizzaria.domain.model.Produto;
-import br.com.fiap.pizzaria.domain.repository.PedidoRepository;
-import br.com.fiap.pizzaria.interfaceadapters.dto.PedidoRequest;
-import org.springframework.stereotype.Service;
+import br.com.fiap.pizzaria.interfaceadapters.dto.PedidoDTO;
 
-import java.time.LocalDateTime;
-@Service
-public class PedidoService {
-
-    private final ProdutoService produtoService;
-    private final ClienteService clienteService;
-    private final PedidoRepository pedidoRepository;
-
-    public PedidoService(ProdutoService produtoService, ClienteService clienteService, PedidoRepository pedidoRepository) {
-        this.produtoService = produtoService;
-        this.clienteService = clienteService;
-        this.pedidoRepository = pedidoRepository;
-    }
-
-    public Pedido cadastrarPedido(PedidoRequest pedidoRequest) {
-        Cliente cliente = clienteService.recuperaClientePorId(pedidoRequest.getIdCliente())
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
-        Produto produto = produtoService.recuperarProdutoPorId(pedidoRequest.getIdProduto())
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
-
-        Pedido pedidoForm = new Pedido(produto, cliente, cliente.getEndereco(), StatusPedido.INICIO.getDescricao(), LocalDateTime.now());
-
-        return pedidoRepository.save(pedidoForm);
-    }
+public interface PedidoService {
+	
+    /**
+     * Retorna todos os registros do banco de dados.
+     *
+     * @return uma lista de todos os registros.
+     */
+	public List<Pedido> buscarTodos();
+	
+    /**
+     * Retorna um registro específico pelo seu ID.
+     *
+     * @param id o ID do registro a ser buscado.
+     * @return um Optional contendo o registro encontrado, ou vazio se não encontrado.
+     */
+    public Optional<Pedido> buscarPorId(Long id);
+	
+    /**
+     * Cria um novo registro no banco de dados.
+     *
+     * @param pedido a entidade a ser criada.
+     * @return a entidade criada.
+     */
+    public Pedido cadastrarPedido(PedidoDTO pedidoDTO);
+    
+    /**
+     * Atualiza um registro existente no banco de dados.
+     *
+     * @param pedido a entidade a ser criada.
+     * @return a entidade criada.
+     */
+    public Pedido cancelarPedido(PedidoDTO pedidoDTO);
 
 }

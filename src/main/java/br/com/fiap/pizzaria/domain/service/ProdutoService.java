@@ -1,40 +1,49 @@
 package br.com.fiap.pizzaria.domain.service;
 
-import br.com.fiap.pizzaria.domain.model.Produto;
-import br.com.fiap.pizzaria.domain.repository.ProdutoRepository;
-import br.com.fiap.pizzaria.interfaceadapters.dto.ProdutoRequest;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
-@Service
-public class ProdutoService {
+import br.com.fiap.pizzaria.domain.model.Produto;
 
-    private final ProdutoRepository produtoRepository;
-    public ProdutoService (ProdutoRepository produtoRepository){
-        this.produtoRepository = produtoRepository;
-    }
-    public List<Produto> recuperarProdutos(){
-        List<Produto> produtoList = produtoRepository.findAll();
-        return produtoList;
-    }
+public interface ProdutoService {
+	
+    /**
+     * Retorna todos os registros do banco de dados.
+     *
+     * @return uma lista de todos os registros.
+     */
+	public List<Produto> buscarTodos();
+	
+    /**
+     * Retorna um registro específico pelo seu ID.
+     *
+     * @param id o ID do registro a ser buscado.
+     * @return um Optional contendo o registro encontrado, ou vazio se não encontrado.
+     */
+    public Optional<Produto> buscarPorId(Long id);
+	
+    /**
+     * Cria um novo registro no banco de dados.
+     *
+     * @param produto a entidade a ser criada.
+     * @return a entidade criada.
+     */
+    public Produto criar(Produto produto);
 
-    public Produto salvarProduto (Produto produto){
-        return produtoRepository.save(produto);
-    }
+    /**
+     * Atualiza um registro existente no banco de dados.
+     *
+     * @param id o ID do registro a ser atualizado.
+     * @param produto a entidade com as novas informações.
+     * @return a entidade atualizada.
+     */
+    public Produto atualizar(Long id, Produto produto);
 
-    public Produto converterProdutoRequestEmProduto(ProdutoRequest produtoRequest){
-
-        Produto produto = new Produto();
-        produto.setNome(produtoRequest.getNome());
-        produto.setPreco(produtoRequest.getPreco());
-        produto.setTipo(produtoRequest.getTipo());
-        return produto;
-    }
-
-    public Optional<Produto> recuperarProdutoPorId(Long idProduto){
-        return produtoRepository.findById(idProduto);
-    }
+    /**
+     * Deleta um registro do banco de dados pelo seu ID.
+     *
+     * @param id o ID do registro a ser deletado.
+     */
+    public void deletarPorId(Long id);
 
 }
