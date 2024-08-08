@@ -3,7 +3,6 @@ package br.com.fiap.pizzaria.domain.service;
 import java.util.List;
 import java.util.Optional;
 
-import br.com.fiap.pizzaria.domain.model.Produto;
 import br.com.fiap.pizzaria.interfaceadapters.dto.ProdutoDTO;
 
 public interface ProdutoService {

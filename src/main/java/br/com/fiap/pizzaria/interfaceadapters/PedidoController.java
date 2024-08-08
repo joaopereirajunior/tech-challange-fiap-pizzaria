@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.fiap.pizzaria.domain.service.PedidoService;
 import br.com.fiap.pizzaria.interfaceadapters.dto.PedidoDTO;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -25,22 +26,26 @@ public class PedidoController {
         this.pedidoService = pedidoService;
     }
 
+    @Operation(description = "Retorna todos os pedidos.")
     @GetMapping
     public ResponseEntity<List<PedidoDTO>> buscarTodos() {
         List<PedidoDTO> pedidos = pedidoService.buscarTodos();
         return ResponseEntity.ok(pedidos);
     }
     
-    @GetMapping("/{idProduto}")
+    @Operation(description = "Retorna o pedido pelo ID informado.")
+    @GetMapping("/{idPedido}")
     public ResponseEntity<Optional<PedidoDTO>> buscarPorId(@PathVariable Long idPedido){
         return ResponseEntity.ok(pedidoService.buscarPorId(idPedido));
     }
     
+    @Operation(description = "Efetua o cadastro de um novo pedido.")
     @PostMapping
     public PedidoDTO cadastrarPedido(@RequestBody PedidoDTO pedidoRequest){
         return pedidoService.cadastrarPedido(pedidoRequest);
     }
     
+    @Operation(description = "Cancela o pedido.")
     @PatchMapping("/{idPedido}/cancelar")
     public PedidoDTO cancelarPedido(@PathVariable Long idPedido){
         return pedidoService.cancelarPedido(idPedido);

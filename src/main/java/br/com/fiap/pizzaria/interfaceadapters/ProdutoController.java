@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.fiap.pizzaria.domain.model.Produto;
 import br.com.fiap.pizzaria.domain.service.ProdutoService;
 import br.com.fiap.pizzaria.domain.service.impl.ProdutoServiceImpl;
 import br.com.fiap.pizzaria.interfaceadapters.dto.ProdutoDTO;

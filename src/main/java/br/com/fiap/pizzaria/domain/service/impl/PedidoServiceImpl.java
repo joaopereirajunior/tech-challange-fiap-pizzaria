@@ -16,7 +16,9 @@ import br.com.fiap.pizzaria.domain.repository.ClienteRepository;
 import br.com.fiap.pizzaria.domain.repository.PedidoRepository;
 import br.com.fiap.pizzaria.domain.repository.ProdutoRepository;
 import br.com.fiap.pizzaria.domain.service.PedidoService;
+import br.com.fiap.pizzaria.interfaceadapters.dto.ClienteDTO;
 import br.com.fiap.pizzaria.interfaceadapters.dto.PedidoDTO;
+import br.com.fiap.pizzaria.interfaceadapters.dto.ProdutoDTO;
 
 @Service
 public class PedidoServiceImpl implements PedidoService {
@@ -56,10 +58,10 @@ public class PedidoServiceImpl implements PedidoService {
 
 	@Override
 	public PedidoDTO cadastrarPedido(PedidoDTO pedidoDTO) {
-	    Cliente cliente = clienteRepository.findById(pedidoDTO.idCliente())
+	    Cliente cliente = clienteRepository.findById(pedidoDTO.cliente().idCliente())
 	            .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
-	    Produto produto = produtoRepository.findById(pedidoDTO.idProduto())
+	    Produto produto = produtoRepository.findById(pedidoDTO.produto().idProduto())
 	            .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
 	    Pedido pedido = new Pedido(produto, cliente, cliente.getEndereco(), StatusPedido.INICIO.getDescricao(), LocalDateTime.now());
@@ -82,9 +84,17 @@ public class PedidoServiceImpl implements PedidoService {
 	
     public PedidoDTO converterPedidoEmPedidoDTO(Pedido pedido) {
         return new PedidoDTO(pedido.getIdPedido(),
-        		pedido.getCliente().getIdCliente(),
-        		pedido.getProduto().getIdProduto(), 
         		pedido.getEnderecoEntrega(),
-        		pedido.getStatusPedido());
+        		pedido.getStatusPedido(),
+        		converterClienteEmClienteDTO(pedido.getCliente()),
+        		converterProdutoEmProdutoDTO(pedido.getProduto()));
+    }
+    
+    public ClienteDTO converterClienteEmClienteDTO(Cliente cliente) {
+        return new ClienteDTO(cliente.getIdCliente(), cliente.getNome(), cliente.getTelefone(), cliente.getEndereco());
+    }
+    
+    public ProdutoDTO converterProdutoEmProdutoDTO(Produto produto) {
+        return new ProdutoDTO(produto.getIdProduto(), produto.getNome(), produto.getTipo(), produto.getPreco());
     }
 }

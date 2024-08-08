@@ -6,13 +6,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import br.com.fiap.pizzaria.domain.model.Cliente;
 import br.com.fiap.pizzaria.domain.model.Produto;
 import br.com.fiap.pizzaria.domain.repository.PedidoRepository;
 import br.com.fiap.pizzaria.domain.repository.ProdutoRepository;
 import br.com.fiap.pizzaria.domain.service.ProdutoService;
-import br.com.fiap.pizzaria.interfaceadapters.dto.ClienteDTO;
 import br.com.fiap.pizzaria.interfaceadapters.dto.ProdutoDTO;
+import io.swagger.v3.oas.annotations.Operation;
 
 @Service
 public class ProdutoServiceImpl implements ProdutoService{
@@ -25,6 +24,7 @@ public class ProdutoServiceImpl implements ProdutoService{
         this.pedidoRepository = pedidoRepository;
     }
 	
+    @Operation(description = "Retorna todos os produtos.")
 	@Override
 	public List<ProdutoDTO> buscarTodos() {
         List<Produto> produtos = produtoRepository.findAll();
@@ -34,6 +34,7 @@ public class ProdutoServiceImpl implements ProdutoService{
                 .collect(Collectors.toList());
 	}
 
+    @Operation(description = "Retorna o produto pelo ID informado.")
 	@Override
 	public Optional<ProdutoDTO> buscarPorId(Long idProduto) {
 		
@@ -48,6 +49,7 @@ public class ProdutoServiceImpl implements ProdutoService{
 	    }
 	}
 
+    @Operation(description = "Efetua o cadastro de um novo produto.")
 	@Override
 	public ProdutoDTO criar(ProdutoDTO produtoDTO) {
 		
@@ -58,6 +60,7 @@ public class ProdutoServiceImpl implements ProdutoService{
 		return produtoDTOResultado;
 	}
 
+    @Operation(description = "Atualiza o cadastro de um produto existente.")
     @Override
     public ProdutoDTO atualizar(Long id, ProdutoDTO produtoDTO) {
         Produto produtoExistente = produtoRepository.findById(id).orElse(null);
@@ -74,6 +77,7 @@ public class ProdutoServiceImpl implements ProdutoService{
         return null;
     }
 
+    @Operation(description = "Deleta o cadastro de um produto.")
     @Override
     public void deletarPorId(Long produtoId) {
     	// Deletando pedidos que contenham o produto informado
