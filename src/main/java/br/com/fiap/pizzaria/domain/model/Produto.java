@@ -25,13 +25,15 @@ public class Produto {
 	private Double preco;
 	
 	public Produto() {}
-	
-	public Produto(String nome, Double preco) {
+
+	public Produto(String nome, String tipo, Double preco) {
+		super();
 		this.nome = nome;
+		this.tipo = tipo;
 		this.preco = preco;
 	}
 
-	public Long getId() {
+	public Long getIdProduto() {
 		return idProduto;
 	}
 

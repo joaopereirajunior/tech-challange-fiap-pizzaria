@@ -20,11 +20,11 @@ public class Pedido {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idPedido;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "id_produto")
 	private Produto produto;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "id_cliente")
 	private Cliente cliente;
 
@@ -75,11 +75,11 @@ public class Pedido {
 		this.enderecoEntrega = enderecoEntrega;
 	}
 
-	public String getStatus() {
+	public String getStatusPedido() {
 		return statusPedido;
 	}
 
-	public void setStatus(String status) {
+	public void setStatusPedido(String status) {
 		this.statusPedido = status;
 	}
 

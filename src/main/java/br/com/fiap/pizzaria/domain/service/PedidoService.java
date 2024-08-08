@@ -13,7 +13,7 @@ public interface PedidoService {
      *
      * @return uma lista de todos os registros.
      */
-	public List<Pedido> buscarTodos();
+	public List<PedidoDTO> buscarTodos();
 	
     /**
      * Retorna um registro específico pelo seu ID.
@@ -21,7 +21,7 @@ public interface PedidoService {
      * @param id o ID do registro a ser buscado.
      * @return um Optional contendo o registro encontrado, ou vazio se não encontrado.
      */
-    public Optional<Pedido> buscarPorId(Long id);
+    public Optional<PedidoDTO> buscarPorId(Long id);
 	
     /**
      * Cria um novo registro no banco de dados.
@@ -29,7 +29,7 @@ public interface PedidoService {
      * @param pedido a entidade a ser criada.
      * @return a entidade criada.
      */
-    public Pedido cadastrarPedido(PedidoDTO pedidoDTO);
+    public PedidoDTO cadastrarPedido(PedidoDTO pedidoDTO);
     
     /**
      * Atualiza um registro existente no banco de dados.
@@ -37,6 +37,6 @@ public interface PedidoService {
      * @param pedido a entidade a ser criada.
      * @return a entidade criada.
      */
-    public Pedido cancelarPedido(PedidoDTO pedidoDTO);
+    public PedidoDTO cancelarPedido(Long id);
 
 }

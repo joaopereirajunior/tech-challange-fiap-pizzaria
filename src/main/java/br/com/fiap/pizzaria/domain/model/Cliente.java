@@ -13,7 +13,7 @@ public class Cliente {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long IdCliente;
+	private Long idCliente;
 
 	@Column(name = "nome")
 	private String nome;
@@ -33,7 +33,7 @@ public class Cliente {
 	}
 	
 	public Long getIdCliente() {
-		return IdCliente;
+		return idCliente;
 	}
 
 	public String getNome() {

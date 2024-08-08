@@ -13,7 +13,7 @@ public interface ClienteService {
      *
      * @return uma lista de todos os registros.
      */
-	public List<Cliente> buscarTodos();
+	public List<ClienteDTO> buscarTodos();
 	
     /**
      * Retorna um registro específico pelo seu ID.
@@ -21,24 +21,24 @@ public interface ClienteService {
      * @param id o ID do registro a ser buscado.
      * @return um Optional contendo o registro encontrado, ou vazio se não encontrado.
      */
-    public Optional<Cliente> buscarPorId(Long id);
+    public Optional<ClienteDTO> buscarPorId(Long id);
 	
     /**
      * Cria um novo registro no banco de dados.
      *
-     * @param cliente a entidade a ser criada.
+     * @param clienteDTO a entidade a ser criada.
      * @return a entidade criada.
      */
-    public Cliente criar(ClienteDTO cliente);
+    public ClienteDTO criar(ClienteDTO clienteDTO);
 
     /**
      * Atualiza um registro existente no banco de dados.
      *
      * @param id o ID do registro a ser atualizado.
-     * @param cliente a entidade com as novas informações.
+     * @param clienteDTO a entidade com as novas informações.
      * @return a entidade atualizada.
      */
-    public Cliente atualizar(Long id, ClienteDTO cliente);
+    public ClienteDTO atualizar(Long id, ClienteDTO clienteDTO);
 
     /**
      * Deleta um registro do banco de dados pelo seu ID.

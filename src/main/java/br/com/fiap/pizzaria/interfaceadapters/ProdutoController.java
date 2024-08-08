@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,28 +30,35 @@ public class ProdutoController {
 
 
     @GetMapping
-    public ResponseEntity<List<Produto>> buscarTodosProdutos(){
+    public ResponseEntity<List<ProdutoDTO>> buscarTodosProdutos(){
 
         return ResponseEntity.ok(produtoService.buscarTodos());
     }
 
     @PostMapping
-    public ResponseEntity<Produto> cadastrarProduto(@RequestBody ProdutoDTO produtoRequest){
-        return ResponseEntity.ok(produtoService.criar(converterProdutoDTOEmProduto(produtoRequest)));
+    public ResponseEntity<ProdutoDTO> cadastrarProduto(@RequestBody ProdutoDTO produtoDTO){
+        return ResponseEntity.ok(produtoService.criar(produtoDTO));
 
     }
 
     @GetMapping("/{idProduto}")
-    public ResponseEntity<Optional<Produto>> buscarPorId(@PathVariable Long idProduto){
+    public ResponseEntity<Optional<ProdutoDTO>> buscarPorId(@PathVariable Long idProduto){
         return ResponseEntity.ok(produtoService.buscarPorId(idProduto));
     }
     
-    public Produto converterProdutoDTOEmProduto(ProdutoDTO produtoRequest){
-        Produto produto = new Produto();
-        produto.setNome(produtoRequest.nome());
-        produto.setPreco(produtoRequest.preco());
-        produto.setTipo(produtoRequest.tipo());
-        return produto;
+    @PutMapping("/{id}")
+    public ResponseEntity<ProdutoDTO> atualizar(@PathVariable Long id, @RequestBody ProdutoDTO produtoDTO) {
+        try {
+            ProdutoDTO produtoAtualizado = produtoService.atualizar(id, produtoDTO);
+            return ResponseEntity.ok(produtoAtualizado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
-
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarPorId(@PathVariable Long id) {
+    	produtoService.deletarPorId(id);
+        return ResponseEntity.noContent().build();
+    }
 }
