@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.fiap.pizzaria.domain.service.ClienteService;
-import br.com.fiap.pizzaria.interfaceadapters.dto.ClienteDTO;
+import br.com.fiap.pizzaria.interfaceadapters.dto.ClienteRequestDTO;
+import br.com.fiap.pizzaria.interfaceadapters.dto.ClienteResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
@@ -29,37 +30,37 @@ public class ClienteController {
     
     @Operation(description = "Retorna todos os clientes.")
     @GetMapping
-    public ResponseEntity<List<ClienteDTO>> buscarTodos() {
-        List<ClienteDTO> clientesDTO = clienteService.buscarTodos();
+    public ResponseEntity<List<ClienteResponseDTO>> buscarTodos() {
+        List<ClienteResponseDTO> clientesDTO = clienteService.buscarTodos();
         return ResponseEntity.ok(clientesDTO);
     }
 
     @Operation(description = "Retorna o cliente pelo ID informado.")
     @GetMapping("/{idCliente}")
-    public ResponseEntity<Optional<ClienteDTO>> recuperaClientePorId(@PathVariable Long idCliente){
+    public ResponseEntity<Optional<ClienteResponseDTO>> recuperaClientePorId(@PathVariable Long idCliente){
 
         return ResponseEntity.ok(clienteService.buscarPorId(idCliente));
     }
     
     @Operation(description = "Efetua o cadastro de um novo cliente.")
     @PostMapping
-    public ResponseEntity<ClienteDTO> criar(@RequestBody ClienteDTO clienteDTO) {
-        ClienteDTO clienteCriado = clienteService.criar(clienteDTO);
+    public ResponseEntity<ClienteResponseDTO> criar(@RequestBody ClienteRequestDTO clienteRequestDTO) {
+        ClienteResponseDTO clienteCriado = clienteService.criar(clienteRequestDTO);
         return ResponseEntity.status(201).body(clienteCriado);
     }
     
     @Operation(description = "Atualiza o cadastro de um cliente existente.")
     @PutMapping("/{id}")
-    public ResponseEntity<ClienteDTO> atualizar(@PathVariable Long id, @RequestBody ClienteDTO clienteDTO) {
+    public ResponseEntity<ClienteResponseDTO> atualizar(@PathVariable Long id, @RequestBody ClienteRequestDTO clienteRequestDTO) {
         try {
-            ClienteDTO clienteAtualizado = clienteService.atualizar(id, clienteDTO);
+            ClienteResponseDTO clienteAtualizado = clienteService.atualizar(id, clienteRequestDTO);
             return ResponseEntity.ok(clienteAtualizado);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
     
-    @Operation(description = "Deleta o cadastro de um cliente.")
+    @Operation(description = "Deleta o cadastro de um cliente pelo ID informado.")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarPorId(@PathVariable Long id) {
         clienteService.deletarPorId(id);

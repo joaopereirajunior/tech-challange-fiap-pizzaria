@@ -10,7 +10,8 @@ import br.com.fiap.pizzaria.domain.model.Cliente;
 import br.com.fiap.pizzaria.domain.repository.ClienteRepository;
 import br.com.fiap.pizzaria.domain.repository.PedidoRepository;
 import br.com.fiap.pizzaria.domain.service.ClienteService;
-import br.com.fiap.pizzaria.interfaceadapters.dto.ClienteDTO;
+import br.com.fiap.pizzaria.interfaceadapters.dto.ClienteRequestDTO;
+import br.com.fiap.pizzaria.interfaceadapters.dto.ClienteResponseDTO;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
@@ -24,7 +25,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
 	@Override
-	public List<ClienteDTO> buscarTodos() {
+	public List<ClienteResponseDTO> buscarTodos() {
 		
         List<Cliente> clientes = clienteRepository.findAll();
         
@@ -34,13 +35,13 @@ public class ClienteServiceImpl implements ClienteService {
 	}
 
 	@Override
-	public Optional<ClienteDTO> buscarPorId(Long idCliente) {
+	public Optional<ClienteResponseDTO> buscarPorId(Long idCliente) {
 		
 	    Optional<Cliente> clienteOpt = clienteRepository.findById(idCliente);
 
 	    if (clienteOpt.isPresent()) {
 	        Cliente cliente = clienteOpt.get();
-	        ClienteDTO clienteDTO = converterClienteEmClienteDTO(cliente);
+	        ClienteResponseDTO clienteDTO = converterClienteEmClienteDTO(cliente);
 	        return Optional.of(clienteDTO);
 	    } else {
 	        return Optional.empty();
@@ -48,17 +49,17 @@ public class ClienteServiceImpl implements ClienteService {
 	}
 	
 	@Override
-	public ClienteDTO criar(ClienteDTO clienteDTO) {
+	public ClienteResponseDTO criar(ClienteRequestDTO clienteDTO) {
 		
 	    Cliente cliente = new Cliente(clienteDTO.nome(), clienteDTO.telefone(), clienteDTO.endereco());
 	    Cliente clienteSalvo = clienteRepository.save(cliente);
-	    ClienteDTO clienteDTOResultado = converterClienteEmClienteDTO(clienteSalvo);
+	    ClienteResponseDTO clienteDTOResultado = converterClienteEmClienteDTO(clienteSalvo);
 	    
 	    return clienteDTOResultado;
 	}
     
 	@Override
-	public ClienteDTO atualizar(Long id, ClienteDTO clienteDTO) {
+	public ClienteResponseDTO atualizar(Long id, ClienteRequestDTO clienteDTO) {
 	    Cliente clienteExistente = clienteRepository.findById(id).orElse(null);
 	    if (clienteExistente != null) {
 
@@ -82,7 +83,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
     
     
-    public ClienteDTO converterClienteEmClienteDTO(Cliente cliente) {
-        return new ClienteDTO(cliente.getIdCliente(), cliente.getNome(), cliente.getTelefone(), cliente.getEndereco());
+    public ClienteResponseDTO converterClienteEmClienteDTO(Cliente cliente) {
+        return new ClienteResponseDTO(cliente.getIdCliente(), cliente.getNome(), cliente.getTelefone(), cliente.getEndereco());
     }
 }

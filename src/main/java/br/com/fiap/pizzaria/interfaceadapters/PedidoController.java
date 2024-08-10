@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.fiap.pizzaria.domain.service.PedidoService;
-import br.com.fiap.pizzaria.interfaceadapters.dto.PedidoDTO;
+import br.com.fiap.pizzaria.interfaceadapters.dto.PedidoRequestDTO;
+import br.com.fiap.pizzaria.interfaceadapters.dto.PedidoResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
@@ -28,26 +29,26 @@ public class PedidoController {
 
     @Operation(description = "Retorna todos os pedidos.")
     @GetMapping
-    public ResponseEntity<List<PedidoDTO>> buscarTodos() {
-        List<PedidoDTO> pedidos = pedidoService.buscarTodos();
+    public ResponseEntity<List<PedidoResponseDTO>> buscarTodos() {
+        List<PedidoResponseDTO> pedidos = pedidoService.buscarTodos();
         return ResponseEntity.ok(pedidos);
     }
     
     @Operation(description = "Retorna o pedido pelo ID informado.")
     @GetMapping("/{idPedido}")
-    public ResponseEntity<Optional<PedidoDTO>> buscarPorId(@PathVariable Long idPedido){
+    public ResponseEntity<Optional<PedidoResponseDTO>> buscarPorId(@PathVariable Long idPedido){
         return ResponseEntity.ok(pedidoService.buscarPorId(idPedido));
     }
     
     @Operation(description = "Efetua o cadastro de um novo pedido.")
     @PostMapping
-    public PedidoDTO cadastrarPedido(@RequestBody PedidoDTO pedidoRequest){
-        return pedidoService.cadastrarPedido(pedidoRequest);
+    public PedidoResponseDTO cadastrarPedido(@RequestBody PedidoRequestDTO pedidoRequestDTO){
+        return pedidoService.cadastrarPedido(pedidoRequestDTO);
     }
     
-    @Operation(description = "Cancela o pedido.")
+    @Operation(description = "Cancela o pedido pelo ID informado..")
     @PatchMapping("/{idPedido}/cancelar")
-    public PedidoDTO cancelarPedido(@PathVariable Long idPedido){
+    public PedidoResponseDTO cancelarPedido(@PathVariable Long idPedido){
         return pedidoService.cancelarPedido(idPedido);
     }
 }

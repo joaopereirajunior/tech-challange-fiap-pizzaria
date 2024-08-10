@@ -10,7 +10,8 @@ import br.com.fiap.pizzaria.domain.model.Produto;
 import br.com.fiap.pizzaria.domain.repository.PedidoRepository;
 import br.com.fiap.pizzaria.domain.repository.ProdutoRepository;
 import br.com.fiap.pizzaria.domain.service.ProdutoService;
-import br.com.fiap.pizzaria.interfaceadapters.dto.ProdutoDTO;
+import br.com.fiap.pizzaria.interfaceadapters.dto.ProdutoRequestDTO;
+import br.com.fiap.pizzaria.interfaceadapters.dto.ProdutoResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 
 @Service
@@ -26,7 +27,7 @@ public class ProdutoServiceImpl implements ProdutoService{
 	
     @Operation(description = "Retorna todos os produtos.")
 	@Override
-	public List<ProdutoDTO> buscarTodos() {
+	public List<ProdutoResponseDTO> buscarTodos() {
         List<Produto> produtos = produtoRepository.findAll();
         
         return produtos.stream()
@@ -36,13 +37,13 @@ public class ProdutoServiceImpl implements ProdutoService{
 
     @Operation(description = "Retorna o produto pelo ID informado.")
 	@Override
-	public Optional<ProdutoDTO> buscarPorId(Long idProduto) {
+	public Optional<ProdutoResponseDTO> buscarPorId(Long idProduto) {
 		
 	    Optional<Produto> produtoOpt = produtoRepository.findById(idProduto);
 
 	    if (produtoOpt.isPresent()) {
 	        Produto produto = produtoOpt.get();
-	        ProdutoDTO produtoDTO = converterProdutoEmProdutoDTO(produto);
+	        ProdutoResponseDTO produtoDTO = converterProdutoEmProdutoDTO(produto);
 	        return Optional.of(produtoDTO);
 	    } else {
 	        return Optional.empty();
@@ -51,18 +52,18 @@ public class ProdutoServiceImpl implements ProdutoService{
 
     @Operation(description = "Efetua o cadastro de um novo produto.")
 	@Override
-	public ProdutoDTO criar(ProdutoDTO produtoDTO) {
+	public ProdutoResponseDTO criar(ProdutoRequestDTO produtoDTO) {
 		
 		Produto produto = new Produto(produtoDTO.nome(), produtoDTO.tipo(), produtoDTO.preco());
 		Produto produtoSalvo = produtoRepository.save(produto);
-		ProdutoDTO produtoDTOResultado = converterProdutoEmProdutoDTO(produtoSalvo);
+		ProdutoResponseDTO produtoDTOResultado = converterProdutoEmProdutoDTO(produtoSalvo);
 		
 		return produtoDTOResultado;
 	}
 
     @Operation(description = "Atualiza o cadastro de um produto existente.")
     @Override
-    public ProdutoDTO atualizar(Long id, ProdutoDTO produtoDTO) {
+    public ProdutoResponseDTO atualizar(Long id, ProdutoRequestDTO produtoDTO) {
         Produto produtoExistente = produtoRepository.findById(id).orElse(null);
         if (produtoExistente != null) {
         	
@@ -87,7 +88,7 @@ public class ProdutoServiceImpl implements ProdutoService{
     	produtoRepository.deleteById(produtoId);
     }
     
-    public ProdutoDTO converterProdutoEmProdutoDTO(Produto produto) {
-        return new ProdutoDTO(produto.getIdProduto(), produto.getNome(), produto.getTipo(), produto.getPreco());
+    public ProdutoResponseDTO converterProdutoEmProdutoDTO(Produto produto) {
+        return new ProdutoResponseDTO(produto.getIdProduto(), produto.getNome(), produto.getTipo(), produto.getPreco());
     }
 }

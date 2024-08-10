@@ -16,9 +16,11 @@ import br.com.fiap.pizzaria.domain.repository.ClienteRepository;
 import br.com.fiap.pizzaria.domain.repository.PedidoRepository;
 import br.com.fiap.pizzaria.domain.repository.ProdutoRepository;
 import br.com.fiap.pizzaria.domain.service.PedidoService;
-import br.com.fiap.pizzaria.interfaceadapters.dto.ClienteDTO;
-import br.com.fiap.pizzaria.interfaceadapters.dto.PedidoDTO;
-import br.com.fiap.pizzaria.interfaceadapters.dto.ProdutoDTO;
+import br.com.fiap.pizzaria.interfaceadapters.dto.ClienteResponseDTO;
+import br.com.fiap.pizzaria.interfaceadapters.dto.PedidoRequestDTO;
+import br.com.fiap.pizzaria.interfaceadapters.dto.PedidoResponseDTO;
+import br.com.fiap.pizzaria.interfaceadapters.dto.ProdutoResponseDTO;
+import io.swagger.v3.oas.annotations.Operation;
 
 @Service
 public class PedidoServiceImpl implements PedidoService {
@@ -34,67 +36,73 @@ public class PedidoServiceImpl implements PedidoService {
         this.pedidoRepository = pedidoRepository;
     }
 
+    @Operation(description = "Retorna todos os pedidos.")
 	@Override
-	public List<PedidoDTO> buscarTodos() {
+	public List<PedidoResponseDTO> buscarTodos() {
         List<Pedido> pedidos = pedidoRepository.findAll();
         return pedidos.stream()
-        		.map(p -> converterPedidoEmPedidoDTO(p))
+        		.map(p -> converterPedidoEmPedidoResponseDTO(p))
                 .collect(Collectors.toList());
 	}
 
+    @Operation(description = "Retorna o pedido pelo ID informado.")
 	@Override
-	public Optional<PedidoDTO> buscarPorId(Long idPedido) {
+	public Optional<PedidoResponseDTO> buscarPorId(Long idPedido) {
 		
 	    Optional<Pedido> pedidoOpt = pedidoRepository.findById(idPedido);
 
 	    if (pedidoOpt.isPresent()) {
 	    	Pedido pedido = pedidoOpt.get();
-	    	PedidoDTO pedidoDTO = converterPedidoEmPedidoDTO(pedido);
+	    	PedidoResponseDTO pedidoDTO = converterPedidoEmPedidoResponseDTO(pedido);
 	        return Optional.of(pedidoDTO);
 	    } else {
 	        return Optional.empty();
 	    }
 	}
 
+    @Operation(description = "Efetua o cadastro de um novo pedido.")
 	@Override
-	public PedidoDTO cadastrarPedido(PedidoDTO pedidoDTO) {
-	    Cliente cliente = clienteRepository.findById(pedidoDTO.cliente().idCliente())
+	public PedidoResponseDTO cadastrarPedido(PedidoRequestDTO pedidoDTO) {
+	    Cliente cliente = clienteRepository.findById(pedidoDTO.Idcliente())
 	            .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
-	    Produto produto = produtoRepository.findById(pedidoDTO.produto().idProduto())
+	    Produto produto = produtoRepository.findById(pedidoDTO.IdProduto())
 	            .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
 	    Pedido pedido = new Pedido(produto, cliente, cliente.getEndereco(), StatusPedido.INICIO.getDescricao(), LocalDateTime.now());
 
 	    Pedido pedidoSalvo = pedidoRepository.save(pedido);
 
-	    return converterPedidoEmPedidoDTO(pedidoSalvo);
+	    return converterPedidoEmPedidoResponseDTO(pedidoSalvo);
 	}
 
+    @Operation(description = "Efetua o cancelamento de um produto existente pelo ID informado.")
 	@Override
-	public PedidoDTO cancelarPedido(Long id) {
+	public PedidoResponseDTO cancelarPedido(Long id) {
 	    Pedido pedido = pedidoRepository.findById(id)
 	        .orElseThrow(() -> new NoSuchElementException("Pedido com ID " + id + " não encontrado"));
 
 	    pedido.setStatusPedido(StatusPedido.CANCELADO.getDescricao());
 	    Pedido pedidoSalvo = pedidoRepository.save(pedido);
 	    
-	    return converterPedidoEmPedidoDTO(pedidoSalvo);
+	    return converterPedidoEmPedidoResponseDTO(pedidoSalvo);
 	}
 	
-    public PedidoDTO converterPedidoEmPedidoDTO(Pedido pedido) {
-        return new PedidoDTO(pedido.getIdPedido(),
+    public PedidoResponseDTO converterPedidoEmPedidoResponseDTO(Pedido pedido) {
+        return new PedidoResponseDTO(
+        		pedido.getIdPedido(),
         		pedido.getEnderecoEntrega(),
         		pedido.getStatusPedido(),
+        		pedido.getDataPedido(),
         		converterClienteEmClienteDTO(pedido.getCliente()),
         		converterProdutoEmProdutoDTO(pedido.getProduto()));
     }
     
-    public ClienteDTO converterClienteEmClienteDTO(Cliente cliente) {
-        return new ClienteDTO(cliente.getIdCliente(), cliente.getNome(), cliente.getTelefone(), cliente.getEndereco());
+    public ClienteResponseDTO converterClienteEmClienteDTO(Cliente cliente) {
+        return new ClienteResponseDTO(cliente.getIdCliente(), cliente.getNome(), cliente.getTelefone(), cliente.getEndereco());
     }
     
-    public ProdutoDTO converterProdutoEmProdutoDTO(Produto produto) {
-        return new ProdutoDTO(produto.getIdProduto(), produto.getNome(), produto.getTipo(), produto.getPreco());
+    public ProdutoResponseDTO converterProdutoEmProdutoDTO(Produto produto) {
+        return new ProdutoResponseDTO(produto.getIdProduto(), produto.getNome(), produto.getTipo(), produto.getPreco());
     }
 }

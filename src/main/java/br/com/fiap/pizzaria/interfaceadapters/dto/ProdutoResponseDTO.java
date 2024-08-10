@@ -1,6 +1,6 @@
 package br.com.fiap.pizzaria.interfaceadapters.dto;
 
-public record ProdutoDTO(
+public record ProdutoResponseDTO(
 		Long idProduto,
 		String nome,
 		String tipo,

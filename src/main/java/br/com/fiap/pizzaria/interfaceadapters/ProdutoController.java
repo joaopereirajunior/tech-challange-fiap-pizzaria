@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.fiap.pizzaria.domain.service.ProdutoService;
 import br.com.fiap.pizzaria.domain.service.impl.ProdutoServiceImpl;
-import br.com.fiap.pizzaria.interfaceadapters.dto.ProdutoDTO;
+import br.com.fiap.pizzaria.interfaceadapters.dto.ProdutoRequestDTO;
+import br.com.fiap.pizzaria.interfaceadapters.dto.ProdutoResponseDTO;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/produtos")
@@ -27,34 +29,38 @@ public class ProdutoController {
         this.produtoService = produtoService;
     }
 
-
+    @Operation(description = "Retorna todos os produtos.")
     @GetMapping
-    public ResponseEntity<List<ProdutoDTO>> buscarTodosProdutos(){
+    public ResponseEntity<List<ProdutoResponseDTO>> buscarTodosProdutos(){
 
         return ResponseEntity.ok(produtoService.buscarTodos());
     }
 
+    @Operation(description = "Efetua o cadastro de um novo produto.")
     @PostMapping
-    public ResponseEntity<ProdutoDTO> cadastrarProduto(@RequestBody ProdutoDTO produtoDTO){
+    public ResponseEntity<ProdutoResponseDTO> cadastrarProduto(@RequestBody ProdutoRequestDTO produtoDTO){
         return ResponseEntity.ok(produtoService.criar(produtoDTO));
 
     }
 
+    @Operation(description = "Retorna o produto pelo ID informado.")
     @GetMapping("/{idProduto}")
-    public ResponseEntity<Optional<ProdutoDTO>> buscarPorId(@PathVariable Long idProduto){
+    public ResponseEntity<Optional<ProdutoResponseDTO>> buscarPorId(@PathVariable Long idProduto){
         return ResponseEntity.ok(produtoService.buscarPorId(idProduto));
     }
     
+    @Operation(description = "Atualiza o cadastro de um produto existente.")
     @PutMapping("/{id}")
-    public ResponseEntity<ProdutoDTO> atualizar(@PathVariable Long id, @RequestBody ProdutoDTO produtoDTO) {
+    public ResponseEntity<ProdutoResponseDTO> atualizar(@PathVariable Long id, @RequestBody ProdutoRequestDTO produtoDTO) {
         try {
-            ProdutoDTO produtoAtualizado = produtoService.atualizar(id, produtoDTO);
+            ProdutoResponseDTO produtoAtualizado = produtoService.atualizar(id, produtoDTO);
             return ResponseEntity.ok(produtoAtualizado);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
     
+    @Operation(description = "Deleta o cadastro de um produto pelo ID informado.")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarPorId(@PathVariable Long id) {
     	produtoService.deletarPorId(id);
