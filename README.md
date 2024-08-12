@@ -1,4 +1,6 @@
-# Projeto de Aplicação em Java 17 com Spring e APIs RESTful
+# Sistema de Gestão para Pizzaria
+
+Projeto realizado para integrar diferentes processos de uma pizzaria, realizando atividades como: cadastrar produtos, gerir pedidos e gerenciar clientes.
 
 Este projeto é uma aplicação Java 17 desenvolvida com o framework Spring e baseada na arquitetura de Domain-Driven Design (DDD). A aplicação implementa APIs RESTful e inclui documentação automática via Swagger.
 
