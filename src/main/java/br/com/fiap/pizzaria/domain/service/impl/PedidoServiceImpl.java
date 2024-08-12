@@ -1,6 +1,7 @@
 package br.com.fiap.pizzaria.domain.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.fiap.pizzaria.domain.enums.StatusPedido;
 import br.com.fiap.pizzaria.domain.model.Cliente;
+import br.com.fiap.pizzaria.domain.model.ItensPedido;
 import br.com.fiap.pizzaria.domain.model.Pedido;
 import br.com.fiap.pizzaria.domain.model.Produto;
 import br.com.fiap.pizzaria.domain.repository.ClienteRepository;
@@ -17,6 +19,8 @@ import br.com.fiap.pizzaria.domain.repository.PedidoRepository;
 import br.com.fiap.pizzaria.domain.repository.ProdutoRepository;
 import br.com.fiap.pizzaria.domain.service.PedidoService;
 import br.com.fiap.pizzaria.interfaceadapters.dto.ClienteResponseDTO;
+import br.com.fiap.pizzaria.interfaceadapters.dto.ItensPedidoRequestDTO;
+import br.com.fiap.pizzaria.interfaceadapters.dto.ItensPedidoResponseDTO;
 import br.com.fiap.pizzaria.interfaceadapters.dto.PedidoRequestDTO;
 import br.com.fiap.pizzaria.interfaceadapters.dto.PedidoResponseDTO;
 import br.com.fiap.pizzaria.interfaceadapters.dto.ProdutoResponseDTO;
@@ -66,10 +70,17 @@ public class PedidoServiceImpl implements PedidoService {
 	    Cliente cliente = clienteRepository.findById(pedidoDTO.Idcliente())
 	            .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
-	    Produto produto = produtoRepository.findById(pedidoDTO.IdProduto())
-	            .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+	    // Criando um novo pedido com os dados do cliente e o status inicial
+	    Pedido pedido = new Pedido(new ArrayList<>(), cliente, cliente.getEndereco(), StatusPedido.INICIO.getDescricao(), LocalDateTime.now());
 
-	    Pedido pedido = new Pedido(produto, cliente, cliente.getEndereco(), StatusPedido.INICIO.getDescricao(), LocalDateTime.now());
+	    // Itera sobre os itens do pedidoDTO para buscar os produtos e criar os ItensPedido
+	    for (ItensPedidoRequestDTO itemDTO : pedidoDTO.itensPedido()) {
+	        Produto produto = produtoRepository.findById(itemDTO.idProduto())
+	                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+	        
+	        ItensPedido itemPedido = new ItensPedido(pedido, produto, itemDTO.quantidade());
+	        pedido.addItem(itemPedido); // Usando o método para adicionar e manter a consistência da relação
+	    }
 
 	    Pedido pedidoSalvo = pedidoRepository.save(pedido);
 
@@ -89,20 +100,33 @@ public class PedidoServiceImpl implements PedidoService {
 	}
 	
     public PedidoResponseDTO converterPedidoEmPedidoResponseDTO(Pedido pedido) {
+        List<ItensPedidoResponseDTO> itensPedidoDTO = pedido.getItensPedido().stream()
+                .map(this::converterItensPedidoEmItensPedidoResponseDTO)
+                .toList();
+
         return new PedidoResponseDTO(
-        		pedido.getIdPedido(),
-        		pedido.getEnderecoEntrega(),
-        		pedido.getStatusPedido(),
-        		pedido.getDataPedido(),
-        		converterClienteEmClienteDTO(pedido.getCliente()),
-        		converterProdutoEmProdutoDTO(pedido.getProduto()));
+                pedido.getIdPedido(),
+                pedido.getEnderecoEntrega(),
+                pedido.getStatusPedido(),
+                pedido.getDataPedido(),
+                converterClienteEmClienteResponseDTO(pedido.getCliente()),
+                itensPedidoDTO
+        );
     }
     
-    public ClienteResponseDTO converterClienteEmClienteDTO(Cliente cliente) {
+    public ItensPedidoResponseDTO converterItensPedidoEmItensPedidoResponseDTO(ItensPedido itensPedido) {
+    	return new ItensPedidoResponseDTO(converterProdutoEmProdutoResponseDTO(itensPedido.getProduto()), itensPedido.getQuantidade());
+    }
+    
+    public ClienteResponseDTO converterItensPedidoEmItensPedidoResponseDTO(Cliente cliente) {
         return new ClienteResponseDTO(cliente.getIdCliente(), cliente.getNome(), cliente.getTelefone(), cliente.getEndereco());
     }
     
-    public ProdutoResponseDTO converterProdutoEmProdutoDTO(Produto produto) {
+    public ClienteResponseDTO converterClienteEmClienteResponseDTO(Cliente cliente) {
+        return new ClienteResponseDTO(cliente.getIdCliente(), cliente.getNome(), cliente.getTelefone(), cliente.getEndereco());
+    }
+    
+    public ProdutoResponseDTO converterProdutoEmProdutoResponseDTO(Produto produto) {
         return new ProdutoResponseDTO(produto.getIdProduto(), produto.getNome(), produto.getTipo(), produto.getPreco());
     }
 }

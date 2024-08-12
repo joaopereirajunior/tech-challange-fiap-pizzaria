@@ -8,11 +8,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.fiap.pizzaria.domain.model.ItensPedido;
 import br.com.fiap.pizzaria.domain.model.Pedido;
 
 @Repository
-public interface PedidoRepository extends JpaRepository<Pedido, Long>{
+public interface ItensPedidoRepository extends JpaRepository<ItensPedido, Long> {
 
-    @Query("SELECT p FROM Pedido p WHERE p.cliente.id = :clienteId")
-    List<Pedido> findByClienteId(Long clienteId);
+	@Query("SELECT p FROM ItensPedido p WHERE p.pedido.id = :pedidoId")
+	List<ItensPedido> findByPedidoId(Long pedidoId);
+
+	@Query("SELECT p FROM ItensPedido p WHERE p.produto.id = :produtoId")
+	List<ItensPedido> findByProdutoId(Long produtoId);
 }

@@ -16,9 +16,11 @@ import br.com.fiap.pizzaria.domain.service.PedidoService;
 import br.com.fiap.pizzaria.interfaceadapters.dto.PedidoRequestDTO;
 import br.com.fiap.pizzaria.interfaceadapters.dto.PedidoResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/pedidos")
+@Tag(name = "Pedido", description = "Operações relacionadas a pedidos")
 public class PedidoController {
 	
     private final PedidoService pedidoService;

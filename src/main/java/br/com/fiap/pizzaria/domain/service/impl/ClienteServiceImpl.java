@@ -5,9 +5,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.fiap.pizzaria.domain.model.Cliente;
+import br.com.fiap.pizzaria.domain.model.ItensPedido;
+import br.com.fiap.pizzaria.domain.model.Pedido;
 import br.com.fiap.pizzaria.domain.repository.ClienteRepository;
+import br.com.fiap.pizzaria.domain.repository.ItensPedidoRepository;
 import br.com.fiap.pizzaria.domain.repository.PedidoRepository;
 import br.com.fiap.pizzaria.domain.service.ClienteService;
 import br.com.fiap.pizzaria.interfaceadapters.dto.ClienteRequestDTO;
@@ -18,10 +22,12 @@ public class ClienteServiceImpl implements ClienteService {
 
     private final ClienteRepository clienteRepository;
     private final PedidoRepository pedidoRepository;
+    private final ItensPedidoRepository itensPedidoRepository;
 
-    public ClienteServiceImpl(ClienteRepository clienteRepository, PedidoRepository pedidoRepository) {
+    public ClienteServiceImpl(ClienteRepository clienteRepository, PedidoRepository pedidoRepository, ItensPedidoRepository itensPedidoRepository) {
         this.clienteRepository = clienteRepository;
         this.pedidoRepository = pedidoRepository;
+        this.itensPedidoRepository = itensPedidoRepository;
     }
 
 	@Override
@@ -74,16 +80,35 @@ public class ClienteServiceImpl implements ClienteService {
 	    return null;
 	}
 
-    @Override
-    public void deletarPorId(Long clienteId) {
-    	
-    	pedidoRepository.deleteByClienteId(clienteId);
-    	
-        clienteRepository.deleteById(clienteId);
-    }
-    
+	@Transactional
+	@Override
+	public void deletarPorId(Long id) {
+	    Cliente cliente = clienteRepository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+
+	    // Verifica se o cliente está associado a algum produto
+	    List<Pedido> pedidos = pedidoRepository.findByClienteId(id);
+
+	    if (!pedidos.isEmpty()) {
+	        // Para cada produto associado ao cliente, verifica se há itens pedidos associados
+	        for (Pedido pedido : pedidos) {
+	            List<ItensPedido> itensPedidos = itensPedidoRepository.findByPedidoId(pedido.getIdPedido());
+
+	            if (!itensPedidos.isEmpty()) {
+	            	itensPedidoRepository.deleteAll(itensPedidos);
+	            }
+	        }
+	        // Se não há itens pedidos associados, remover os produtos
+	        pedidoRepository.deleteAll(pedidos);
+	    }
+
+	    // Exclui o cliente
+	    clienteRepository.delete(cliente);
+	}
     
     public ClienteResponseDTO converterClienteEmClienteDTO(Cliente cliente) {
         return new ClienteResponseDTO(cliente.getIdCliente(), cliente.getNome(), cliente.getTelefone(), cliente.getEndereco());
     }
+
+
 }

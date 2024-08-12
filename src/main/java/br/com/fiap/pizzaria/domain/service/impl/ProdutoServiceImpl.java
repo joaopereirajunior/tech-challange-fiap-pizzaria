@@ -5,8 +5,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import br.com.fiap.pizzaria.domain.model.ItensPedido;
+import br.com.fiap.pizzaria.domain.model.Pedido;
 import br.com.fiap.pizzaria.domain.model.Produto;
+import br.com.fiap.pizzaria.domain.repository.ItensPedidoRepository;
 import br.com.fiap.pizzaria.domain.repository.PedidoRepository;
 import br.com.fiap.pizzaria.domain.repository.ProdutoRepository;
 import br.com.fiap.pizzaria.domain.service.ProdutoService;
@@ -19,10 +23,12 @@ public class ProdutoServiceImpl implements ProdutoService{
 
     private final ProdutoRepository produtoRepository;
     private final PedidoRepository pedidoRepository;
+    private final ItensPedidoRepository itensPedidoRepository;
     
-    public ProdutoServiceImpl(ProdutoRepository produtoRepository, PedidoRepository pedidoRepository) {
+    public ProdutoServiceImpl(ProdutoRepository produtoRepository, PedidoRepository pedidoRepository, ItensPedidoRepository itensPedidoRepository) {
         this.produtoRepository = produtoRepository;
         this.pedidoRepository = pedidoRepository;
+        this.itensPedidoRepository = itensPedidoRepository;
     }
 	
     @Operation(description = "Retorna todos os produtos.")
@@ -78,17 +84,34 @@ public class ProdutoServiceImpl implements ProdutoService{
         return null;
     }
 
-    @Operation(description = "Deleta o cadastro de um produto.")
-    @Override
-    public void deletarPorId(Long produtoId) {
-    	// Deletando pedidos que contenham o produto informado
-    	pedidoRepository.deleteByProdutoId(produtoId);
-    	
-    	// Deletando informações do cliente
-    	produtoRepository.deleteById(produtoId);
-    }
+	@Transactional
+	@Override
+	public void deletarPorId(Long id) {
+		Produto produto = produtoRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+		// Verifica se o produto está associado a algum item de pedido
+		List<ItensPedido> itensPedidos = itensPedidoRepository.findByProdutoId(id);
+
+		if (!itensPedidos.isEmpty()) {
+			// Exclui todos os itens pedidos associados ao produto
+			itensPedidoRepository.deleteAll(itensPedidos);
+
+			for (ItensPedido item : itensPedidos) {
+				
+				Pedido pedido = pedidoRepository.findById(item.getPedido().getIdPedido())
+						.orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+
+				pedidoRepository.delete(pedido);
+			}
+		}
+
+		// Exclui o produto
+		produtoRepository.delete(produto);
+	}
     
     public ProdutoResponseDTO converterProdutoEmProdutoDTO(Produto produto) {
         return new ProdutoResponseDTO(produto.getIdProduto(), produto.getNome(), produto.getTipo(), produto.getPreco());
     }
+
 }

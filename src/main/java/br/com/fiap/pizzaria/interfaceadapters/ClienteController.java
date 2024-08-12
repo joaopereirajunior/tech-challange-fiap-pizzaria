@@ -17,9 +17,11 @@ import br.com.fiap.pizzaria.domain.service.ClienteService;
 import br.com.fiap.pizzaria.interfaceadapters.dto.ClienteRequestDTO;
 import br.com.fiap.pizzaria.interfaceadapters.dto.ClienteResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/clientes")
+@Tag(name = "Cliente", description = "Operações relacionadas a clientes")
 public class ClienteController {
 	
    private final ClienteService clienteService;

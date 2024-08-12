@@ -1,15 +1,18 @@
 package br.com.fiap.pizzaria.domain.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -19,10 +22,9 @@ public class Pedido {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idPedido;
-
-	@ManyToOne
-	@JoinColumn(name = "id_produto")
-	private Produto produto;
+	
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItensPedido> itensPedido = new ArrayList<>();
 
 	@ManyToOne
 	@JoinColumn(name = "id_cliente")
@@ -39,8 +41,8 @@ public class Pedido {
 
 	public Pedido() {}
 
-	public Pedido(Produto produto, Cliente cliente, String enderecoEntrega, String statusPedido, LocalDateTime dataPedido) {
-		this.produto = produto;
+	public Pedido(List<ItensPedido> itensPedido, Cliente cliente, String enderecoEntrega, String statusPedido, LocalDateTime dataPedido) {
+		this.itensPedido = itensPedido;
 		this.cliente = cliente;
 		this.enderecoEntrega = enderecoEntrega;
 		this.statusPedido = statusPedido;
@@ -51,12 +53,12 @@ public class Pedido {
 		return idPedido;
 	}
 
-	public Produto getProduto() {
-		return produto;
+	public List<ItensPedido> getItensPedido() {
+		return itensPedido;
 	}
 
-	public void setProduto(Produto produto) {
-		this.produto = produto;
+	public void setItensPedido(List<ItensPedido> itensPedido) {
+		this.itensPedido = itensPedido;
 	}
 
 	public Cliente getCliente() {
@@ -89,5 +91,10 @@ public class Pedido {
 
 	public void setDataPedido(LocalDateTime dataPedido) {
 		this.dataPedido = dataPedido;
+	}
+	
+	public void addItem(ItensPedido item) {
+	    itensPedido.add(item);
+	    item.setPedido(this);
 	}
 }
