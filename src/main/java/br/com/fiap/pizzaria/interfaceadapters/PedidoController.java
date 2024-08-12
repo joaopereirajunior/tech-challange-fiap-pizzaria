@@ -3,7 +3,10 @@ package br.com.fiap.pizzaria.interfaceadapters;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.validation.Valid;
+import jakarta.validation.executable.ValidateOnExecution;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +24,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/pedidos")
 @Tag(name = "Pedido", description = "Operações relacionadas a pedidos")
+
 public class PedidoController {
 	
     private final PedidoService pedidoService;
@@ -44,7 +48,7 @@ public class PedidoController {
     
     @Operation(description = "Efetua o cadastro de um novo pedido.")
     @PostMapping
-    public PedidoResponseDTO cadastrarPedido(@RequestBody PedidoRequestDTO pedidoRequestDTO){
+    public PedidoResponseDTO cadastrarPedido(@RequestBody @Valid PedidoRequestDTO pedidoRequestDTO){
         return pedidoService.cadastrarPedido(pedidoRequestDTO);
     }
     

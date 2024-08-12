@@ -3,6 +3,7 @@ package br.com.fiap.pizzaria.interfaceadapters;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +41,7 @@ public class ProdutoController {
 
     @Operation(description = "Efetua o cadastro de um novo produto.")
     @PostMapping
-    public ResponseEntity<ProdutoResponseDTO> cadastrarProduto(@RequestBody ProdutoRequestDTO produtoDTO){
+    public ResponseEntity<ProdutoResponseDTO> cadastrarProduto(@RequestBody @Valid ProdutoRequestDTO produtoDTO){
         return ResponseEntity.ok(produtoService.criar(produtoDTO));
 
     }
